@@ -14,19 +14,48 @@ class MovieListWidget extends StatefulWidget {
 }
 
 class _MovieListWidgetState extends State<MovieListWidget> {
+  final controller = ScrollController();
+  int page = 1;
+  bool hasMore = true;
   List movies = [];
 
   @override
   void initState() {
     super.initState();
+    controller.addListener(() {
+      if (controller.position.maxScrollExtent == controller.offset) {
+        if (hasMore) {
+          fetch();
+        }
+      }
+    });
     init();
+  }
+
+  Future fetch() async {
+    final newMovies = await MovieApi.getMovies(page);
+    setState(() {
+      if (hasMore) {
+        page++;
+        this.movies.addAll(newMovies);
+      }
+      if (newMovies.length < movies.length) {
+        hasMore = false;
+      }
+    });
   }
 
   Future init() async {
     final movies = await MovieApi.getMovies();
     setState(() {
-      this.movies = movies;
+      this.movies.addAll(movies);
     });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   void openMovieCard(Movie movie) {
@@ -55,6 +84,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
 
   Widget _buildMovieListGridView() {
     return GridView.builder(
+      controller: controller,
       itemCount: movies.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,

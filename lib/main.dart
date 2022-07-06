@@ -1,4 +1,3 @@
-import 'package:amifactory_test_app/widgets/movie_card_widget.dart';
 import 'package:amifactory_test_app/widgets/movie_list_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -12,17 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'amifactory_test_app',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Rubik'),
       home: const MovieListWidget(),
-      initialRoute: '/movie_list_screen',
-      routes: {
-        '/movie_list_screen': (context) => const MovieListWidget(),
-        // '/movie_list_screen/movie_details': (context) {
-        //   final movie = ModalRoute.of(context)?.settings.arguments;
-        //   return MovieCardWidget(movie: movie);
-        // }
-      },
     );
   }
 }
