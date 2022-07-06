@@ -296,7 +296,7 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
                     fixedSize:
                         MaterialStateProperty.all<Size>(const Size(180, 48)),
                   ),
-                  onPressed: () => Navigator.of(context).pushNamed('/error'),
+                  onPressed: () {},
                   icon: const Icon(Icons.play_arrow),
                   label: const Text('Watch trailer', style: buttonStyle),
                 ),

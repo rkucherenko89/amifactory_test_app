@@ -1,7 +1,9 @@
 import 'package:amifactory_test_app/app_colors.dart';
 import 'package:amifactory_test_app/api/movie_api.dart';
+import 'package:amifactory_test_app/check_resource_availability.dart';
 import 'package:amifactory_test_app/domain/entity/movie.dart';
 import 'package:amifactory_test_app/widgets/movie_card_widget.dart';
+import 'package:amifactory_test_app/widgets/ooops_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,18 +20,22 @@ class _MovieListWidgetState extends State<MovieListWidget> {
   int page = 1;
   bool hasMore = true;
   List movies = [];
+  bool isOnline = true;
 
   @override
   void initState() {
-    super.initState();
-    controller.addListener(() {
-      if (controller.offset > controller.position.maxScrollExtent * 0.8) {
-        if (hasMore) {
-          fetch();
+    checkInternet();
+    if (isOnline) {
+      controller.addListener(() {
+        if (controller.offset > controller.position.maxScrollExtent * 0.8) {
+          if (hasMore) {
+            fetch();
+          }
         }
-      }
-    });
-    init();
+      });
+      init();
+    }
+    super.initState();
   }
 
   Future fetch() async {
@@ -37,11 +43,18 @@ class _MovieListWidgetState extends State<MovieListWidget> {
     setState(() {
       if (hasMore) {
         page++;
-        this.movies.addAll(newMovies);
+        movies.addAll(newMovies);
       }
       if (newMovies.length < movies.length) {
         hasMore = false;
       }
+    });
+  }
+
+  Future checkInternet() async {
+    final isOnline = await CheckResourceAvailability.hasNetwork();
+    setState(() {
+      this.isOnline = isOnline;
     });
   }
 
@@ -72,13 +85,15 @@ class _MovieListWidgetState extends State<MovieListWidget> {
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
       ),
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        body: Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25, top: 60),
-          child: _buildMovieListGridView(),
-        ),
-      ),
+      child: !isOnline
+          ? OoopsWidget()
+          : Scaffold(
+              backgroundColor: AppColors.bgColor,
+              body: Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25, top: 60),
+                child: _buildMovieListGridView(),
+              ),
+            ),
     );
   }
 
@@ -120,11 +135,10 @@ class _MovieListWidgetState extends State<MovieListWidget> {
               height: 215,
               width: double.infinity,
               child: FadeInImage(
-                image: NetworkImage(
-                  movie.poster,
-                ),
-                placeholder: AssetImage('assets/download.png')
-              ),
+                  image: NetworkImage(
+                    movie.poster,
+                  ),
+                  placeholder: AssetImage('assets/download.png')),
             ),
             const SizedBox(height: 14),
             Row(
