@@ -3,20 +3,21 @@ import 'package:amifactory_test_app/domain/entity/movie.dart';
 import 'package:amifactory_test_app/min_to_hours.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class MovieCard extends StatefulWidget {
+class MovieCardWidget extends StatefulWidget {
   final Movie movie;
 
-  const MovieCard({
+  const MovieCardWidget({
     Key? key,
     required this.movie,
   }) : super(key: key);
 
   @override
-  State<MovieCard> createState() => _MovieCardState();
+  State<MovieCardWidget> createState() => _MovieCardWidgetState();
 }
 
-class _MovieCardState extends State<MovieCard> {
+class _MovieCardWidgetState extends State<MovieCardWidget> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -35,11 +36,24 @@ class _MovieCardState extends State<MovieCard> {
   }
 
   Widget _buildTopPart() {
+    const titleStyle = TextStyle(
+      color: Colors.white,
+      fontFamily: 'KronaOne',
+      fontWeight: FontWeight.w400,
+      fontSize: 35,
+    );
+
+    const yearStyle = TextStyle(
+      color: Colors.white,
+      fontFamily: 'KronaOne',
+      fontWeight: FontWeight.w700,
+      fontSize: 22.5,
+    );
+
     final Movie movie = widget.movie;
     return Stack(
       alignment: AlignmentDirectional.bottomStart,
       children: [
-        
         Container(
           foregroundDecoration: BoxDecoration(
             gradient: LinearGradient(
@@ -51,37 +65,55 @@ class _MovieCardState extends State<MovieCard> {
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              stops: [0, 0.2, 0.8, 1],
+              stops: [0, 0.2, 0.6, 1],
             ),
           ),
           child: Image.network(movie.bg_picture),
         ),
-        Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              movie.title,
-              style: TextStyle(color: Colors.white),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                movie.title,
+                style: titleStyle,
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                '(${movie.release_year})',
+                style: yearStyle,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 27,
+          left: 18,
+          child: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            padding: EdgeInsets.all(0),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+              size: 35,
             ),
-            Text(
-              '${movie.release_year}',
-              style: TextStyle(color: Colors.white),
-            ),
-            Text(
-              movie.description,
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        )
+          ),
+        ),
       ],
     );
   }
 
   Widget _buildBottomPart() {
     final Movie movie = widget.movie;
-    
+
     final String genres =
         movie.genres.map((e) => e['title']).toList().join(', ');
 
@@ -100,84 +132,174 @@ class _MovieCardState extends State<MovieCard> {
         .toList()
         .join(', ');
 
-    const style = TextStyle(color: Colors.white);
+    const descriptionStyle = TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w400,
+      fontSize: 20,
+    );
 
-    return Column(
-      children: [
-        Row(
+    const genresStyle = TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+      fontSize: 20,
+    );
+
+    const professionStyle = TextStyle(
+      color: Color(0xFFE2E2E2),
+      fontWeight: FontWeight.w400,
+      fontSize: 20,
+    );
+
+    const namesStyle = TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+      fontSize: 20,
+    );
+
+    const imdbRatingStyle = TextStyle(
+      color: Color(0xFFE2E2E2),
+      fontWeight: FontWeight.w500,
+      fontSize: 20,
+    );
+
+    const imdbStyle = TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+      fontSize: 35,
+    );
+
+    const imdbDividerStyle = TextStyle(
+      color: Color(0xFFE2E2E2),
+      fontSize: 22.5,
+      fontWeight: FontWeight.w400,
+    );
+
+    const imdbTenStyle = TextStyle(
+      color: Color(0xFFE2E2E2),
+      fontSize: 20,
+      fontWeight: FontWeight.w400,
+    );
+
+    const buttonStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 17.5,
+      fontWeight: FontWeight.w700,
+    );
+
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (genres.isNotEmpty) ...[
-              Text(genres, style: style),
-              const SizedBox(
-                height: 10,
-                child: VerticalDivider(
-                  color: Colors.white,
-                ),
-              ),
-            ],
             Text(
-              movie.mpa_rating,
-              style: style,
+              movie.description,
+              style: descriptionStyle,
             ),
-            const SizedBox(
-              height: 10,
-              child: VerticalDivider(
-                color: Colors.white,
-              ),
-            ),
-            Text(
-              MinToHours.minToHours(movie.duration),
-              style: style,
-            )
-          ],
-        ),
-        RichText(
-          text: TextSpan(
-            children: [
-              const TextSpan(text: 'Director: ', style: style),
-              TextSpan(text: directors, style: style),
-            ],
-          ),
-        ),
-        RichText(
-          text: TextSpan(
-            children: [
-              const TextSpan(text: 'Writers: ', style: style),
-              TextSpan(text: writers, style: style),
-            ],
-          ),
-        ),
-        RichText(
-          text: TextSpan(
-            children: [
-              const TextSpan(text: 'Stars: ', style: style),
-              TextSpan(text: stars, style: style),
-            ],
-          ),
-        ),
-        Row(
-          children: [
-            Column(
-              children: [
-                Text('iMDb ratting', style: style),
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.orange),
-                    Text('${movie.imdb_rating} / 10', style: style),
+            const SizedBox(height: 24),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  if (genres.isNotEmpty) ...[
+                    Text(genres, style: genresStyle),
+                    const SizedBox(
+                      height: 10,
+                      child: VerticalDivider(
+                        color: Colors.white,
+                      ),
+                    ),
                   ],
-                )
+                  Text(
+                    movie.mpa_rating,
+                    style: genresStyle,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                    child: VerticalDivider(
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    MinToHours.minToHours(movie.duration),
+                    style: genresStyle,
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(text: 'Director: ', style: professionStyle),
+                  TextSpan(text: directors, style: namesStyle),
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(text: 'Writers: ', style: professionStyle),
+                  TextSpan(text: writers, style: namesStyle),
+                ],
+              ),
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(text: 'Stars: ', style: professionStyle),
+                  TextSpan(text: stars, style: namesStyle),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    const Text('iMDb ratting', style: imdbRatingStyle),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 2),
+                          child: SvgPicture.asset(
+                            'assets/icon_star.svg',
+                            height: 20,
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                  text: ' ${movie.imdb_rating}',
+                                  style: imdbStyle),
+                              const TextSpan(
+                                  text: ' /', style: imdbDividerStyle),
+                              const TextSpan(text: '10', style: imdbTenStyle),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                ElevatedButton.icon(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          AppColors.trailerButtonColor),
+                      fixedSize:
+                          MaterialStateProperty.all<Size>(const Size(180, 48)),
+                    ),
+                    onPressed: () {},
+                    icon: const Icon(Icons.play_arrow),
+                    label: const Text('Watch trailer', style: buttonStyle))
               ],
             ),
-            ElevatedButton.icon(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        AppColors.trailerButtonColor)),
-                onPressed: () {},
-                icon: Icon(Icons.play_arrow),
-                label: Text('Watch trailer'))
           ],
         ),
-      ],
+      ),
     );
   }
 }

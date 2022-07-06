@@ -29,6 +29,14 @@ class _MovieListWidgetState extends State<MovieListWidget> {
     });
   }
 
+  void openMovieCard(Movie movie) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MovieCardWidget(movie: movie),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -54,6 +62,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
         mainAxisSpacing: 35,
         crossAxisSpacing: 24,
       ),
+      padding: const EdgeInsets.only(),
       itemBuilder: (BuildContext context, int index) {
         final movie = movies.elementAt(index);
         return _buildMovieGridTile(movie);
@@ -72,7 +81,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
         color: Colors.white, fontSize: 22.5, fontWeight: FontWeight.w500);
 
     return GestureDetector(
-      onTap: () => openCountryCard(movie),
+      onTap: () => openMovieCard(movie),
       child: GridTile(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,14 +124,6 @@ class _MovieListWidgetState extends State<MovieListWidget> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void openCountryCard(Movie movie) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => MovieCard(movie: movie),
       ),
     );
   }

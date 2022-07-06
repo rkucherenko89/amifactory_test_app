@@ -80,7 +80,7 @@ flutter:
         - asset: assets/Rubik-VariableFont_wght.ttf
     - family: KronaOne
       fonts:
-        - asset: KronaOne-Regular.ttf
+        - asset: assets/KronaOne-Regular.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
