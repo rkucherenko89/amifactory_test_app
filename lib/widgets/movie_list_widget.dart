@@ -23,7 +23,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
   void initState() {
     super.initState();
     controller.addListener(() {
-      if (controller.position.maxScrollExtent == controller.offset) {
+      if (controller.offset > controller.position.maxScrollExtent * 0.8) {
         if (hasMore) {
           fetch();
         }
