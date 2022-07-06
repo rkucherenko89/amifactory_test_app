@@ -119,9 +119,11 @@ class _MovieListWidgetState extends State<MovieListWidget> {
             SizedBox(
               height: 215,
               width: double.infinity,
-              child: Image.network(
-                movie.poster,
-                fit: BoxFit.cover,
+              child: FadeInImage(
+                image: NetworkImage(
+                  movie.poster,
+                ),
+                placeholder: AssetImage('assets/download.png')
               ),
             ),
             const SizedBox(height: 14),

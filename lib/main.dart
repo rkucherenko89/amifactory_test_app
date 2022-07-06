@@ -1,4 +1,5 @@
 import 'package:amifactory_test_app/widgets/movie_list_widget.dart';
+import 'package:amifactory_test_app/widgets/ooops_widget.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,6 +16,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Rubik'),
       home: const MovieListWidget(),
+      routes: {
+        '/error':(context) => OoopsWidget(),
+      },
     );
   }
 }

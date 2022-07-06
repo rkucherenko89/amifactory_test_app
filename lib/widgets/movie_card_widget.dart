@@ -68,7 +68,11 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
               stops: [0, 0.2, 0.6, 1],
             ),
           ),
-          child: Image.network(movie.bg_picture),
+          child: FadeInImage(
+              image: NetworkImage(
+                movie.bg_picture,
+              ),
+              placeholder: AssetImage('assets/download_horizontal.png')),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -286,15 +290,16 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
                   ],
                 ),
                 ElevatedButton.icon(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          AppColors.trailerButtonColor),
-                      fixedSize:
-                          MaterialStateProperty.all<Size>(const Size(180, 48)),
-                    ),
-                    onPressed: () {},
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Watch trailer', style: buttonStyle))
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        AppColors.trailerButtonColor),
+                    fixedSize:
+                        MaterialStateProperty.all<Size>(const Size(180, 48)),
+                  ),
+                  onPressed: () => Navigator.of(context).pushNamed('/error'),
+                  icon: const Icon(Icons.play_arrow),
+                  label: const Text('Watch trailer', style: buttonStyle),
+                ),
               ],
             ),
           ],
